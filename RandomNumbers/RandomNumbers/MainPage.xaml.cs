@@ -25,6 +25,8 @@ using System;                                               // ArgumentOutOfRang
 using System.IO;                                            // Stream
 using System.Diagnostics;                                   // Stopwatch
 using System.Globalization;                                 // CultureInfo
+using System.Linq;                                          // ToList
+using System.Reflection;                                    // Assembly
 using System.Threading;                                     // CancellationTokenSource
 using System.Threading.Tasks;                               // Task
 using System.Runtime.InteropServices.WindowsRuntime;        // _wb.PixelBuffer
@@ -38,20 +40,20 @@ using WinRTXamlToolkit.Controls.DataVisualization.Charting; // ColumnSeries
 namespace RandomNumbers
 {
     public sealed partial class MainPage : Page
-    {        
+    {
         private RandomNumberBin[] binning;
         private RNG rng;
-        
+
         private int numOfBins;
 
         private double dmin;
         private double dmax;
         private double delta;
-        
-        private double averagePrev;        
+
+        private double averagePrev;
 
         private int rndBitmapWidth;
-        private int rndBitmapHeight;        
+        private int rndBitmapHeight;
         private byte[] imageArray;
 
         private ColumnSeries cs;
@@ -65,17 +67,18 @@ namespace RandomNumbers
         public MainPage()
         {
             this.InitializeComponent();
+            txtVersion.Text = "Version " + GetAttributeValueFromAssy( "AssemblyFileVersionAttribute" );
 
             // Query bitmap size:
             RndBitmapWidth  = (int)rndBitmap.Width;
             RndBitmapHeight = (int)rndBitmap.Height;
 
             viewModel = new ViewModel( RndBitmapWidth, RndBitmapHeight );
-            NumOfBins = 50;           
+            NumOfBins = 50;
 
             // Must adjust output formatting of average and variance if intervall changed:
-            Dmin = 0.0; 
-            Dmax = 1.0;  
+            Dmin = 0.0;
+            Dmax = 1.0;
             Delta = (Dmax - Dmin) / NumOfBins;
 
             // Create bins to count frequencies:
@@ -85,7 +88,7 @@ namespace RandomNumbers
             {
                 double lower = i * Delta;
                 double upper = lower + Delta;
-                string name  = i.ToString();
+                string name = i.ToString();
 
                 binning[ i ] = new RandomNumberBin()
                 {
@@ -115,7 +118,7 @@ namespace RandomNumbers
 
         public bool IsRunning { get => isRunning; set => isRunning = value; }
         public Task Runner { get => runner; set => runner = value; }
-       
+
         public double AveragePrev { get => averagePrev; set => averagePrev = value; }
         public RNG Rng { get => rng; set => rng = value; }
         public Stopwatch Watch { get => watch; set => watch = value; }
@@ -137,7 +140,7 @@ namespace RandomNumbers
         private void UpdateAverage( long k, double x )
         {
             double w = 1.0d / k;
-            double m = w * (x + (k - 1)*viewModel.Average);
+            double m = w * (x + (k - 1) * viewModel.Average);
 
             // Store average value of last step, 
             // we need this for recursive computation of variance:
@@ -149,8 +152,8 @@ namespace RandomNumbers
         private void UpdateVariance( long k, double x )
         {
             double w = k / (double)(k + 1);
-            double d = viewModel.Average*viewModel.Average - 2* viewModel.Average*AveragePrev + AveragePrev*AveragePrev;
-            double s = viewModel.Variance + w*d;
+            double d = viewModel.Average * viewModel.Average - 2 * viewModel.Average * AveragePrev + AveragePrev * AveragePrev;
+            double s = viewModel.Variance + w * d;
 
             viewModel.Variance = s;
 
@@ -184,16 +187,16 @@ namespace RandomNumbers
 
         private async void Button_Click( object sender, RoutedEventArgs e )
         {
-            if ( IsRunning )
+            if (IsRunning)
             {
                 // Stop random number generation:
-                tokenSource.Cancel();                
+                tokenSource.Cancel();
             }
             else
-            {                
+            {
                 // Strategy pattern - set behavior of random number generator:
                 int idx = rngSelector.SelectedIndex;
-                switch( idx )
+                switch (idx)
                 {
                     case 0:
                         Rng.Randomness = new PseudoRandomness();
@@ -208,7 +211,7 @@ namespace RandomNumbers
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException("Invalid randomness index");
+                        throw new ArgumentOutOfRangeException( "Invalid randomness index" );
                 }
 
                 // create stop watch to compute number generation rate:
@@ -227,7 +230,7 @@ namespace RandomNumbers
                 viewModel.PixelSet = 0;
 
                 ClearImage();
-                WriteImageToBitmap();                
+                WriteImageToBitmap();
 
                 // Create token to facilitate task cancellation:
                 tokenSource = new CancellationTokenSource();
@@ -241,7 +244,7 @@ namespace RandomNumbers
                 // Start random number generation:
                 Watch.Start();
                 Runner = Task.Run( () => GenerateRandomNumbers( token ), token );
-            
+
             } // isRunning
 
             try {
@@ -257,7 +260,7 @@ namespace RandomNumbers
 
             startStopButton.Content = "Start Generation";
             IsRunning = false;
-                                                
+
         } // Button_Click
 
         private async Task GenerateRandomNumbers( CancellationToken ct )
@@ -266,7 +269,7 @@ namespace RandomNumbers
             long onePercent = viewModel.NumOfRandomNumbers / 100L;
 
             viewModel.Variance = 0.0d;
-            viewModel.Average  = AveragePrev = 0.0d;
+            viewModel.Average = AveragePrev = 0.0d;
 
             int p = -1;
             int nextP = 0;
@@ -281,7 +284,7 @@ namespace RandomNumbers
 
                 // Compute offset in bitmap:
                 nextP = OffsetInBitmap( RndBitmapWidth, RndBitmapHeight, viewModel.NumOfRandomNumbers, k );
-                if( nextP > p )
+                if (nextP > p)
                 {
                     p = nextP;
                     SetPixel( p, li );
@@ -300,7 +303,7 @@ namespace RandomNumbers
 
                 binning[ i ].Amount++;
 
-                if( ct.IsCancellationRequested )
+                if (ct.IsCancellationRequested)
                 {
                     await Dispatcher.RunAsync( CoreDispatcherPriority.Normal, () => {
                         numberCount.Text = k.ToString();
@@ -334,7 +337,7 @@ namespace RandomNumbers
                     double rate = k / ts.TotalSeconds;
 
                     await Dispatcher.RunAsync( CoreDispatcherPriority.Normal, () => {
-                        numbersPerSecond.Text = ((int)Math.Floor(rate)).ToString( "N1", CultureInfo.InvariantCulture ) + unit;
+                        numbersPerSecond.Text = ((int)Math.Floor( rate )).ToString( "N1", CultureInfo.InvariantCulture ) + unit;
                     } );
 
                     // ...random number matches:
@@ -343,9 +346,9 @@ namespace RandomNumbers
                     } );
 
                 } // Update GUI
-                    
+
             } // for all random numbers
-            
+
         } // GenerateRandomNumbers
 
         private static int OffsetInBitmap( int w, int h, long N, long k )
@@ -363,10 +366,10 @@ namespace RandomNumbers
         {
             int y = offset / RndBitmapWidth;
             int x = offset - (RndBitmapWidth * y);
- 
+
             int index = 4 * offset;
 
-            if ( rnd == viewModel.RndEquals )
+            if (rnd == viewModel.RndEquals)
             {
                 // Match - set a white pixel:
                 imageArray[ index ] = 255;        // Blue
@@ -379,10 +382,10 @@ namespace RandomNumbers
             else
             {
                 // No match - set a black pixel:
-                imageArray[ index ] = 0;        
-                imageArray[ index + 1 ] = 0;      
-                imageArray[ index + 2 ] = 0;      
-                imageArray[ index + 3 ] = 255;                    
+                imageArray[ index ] = 0;
+                imageArray[ index + 1 ] = 0;
+                imageArray[ index + 2 ] = 0;
+                imageArray[ index + 3 ] = 255;
             }
 
         } // SetPixel
@@ -406,6 +409,21 @@ namespace RandomNumbers
             rndBitmap.Source = _wb;
 
         } // WriteImageToBitmap
+
+
+        public string GetAttributeValueFromAssy( string name )
+        {
+            Assembly currentAssembly = typeof( App ).GetTypeInfo().Assembly;
+
+            var customAttributes = currentAssembly.CustomAttributes;
+            var list = customAttributes.ToList();
+            
+            var result = list.FirstOrDefault( x => x.AttributeType.Name == name );
+            var value  = result.ConstructorArguments[ 0 ].Value;
+
+            return (string)value;
+
+        } // GetAttributeValueFromAssy
 
     } // class MainPage
 

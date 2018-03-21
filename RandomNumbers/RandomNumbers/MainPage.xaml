@@ -102,8 +102,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <TextBox x:Name="varianceText" IsReadOnly="True" Header="Variance" Width="100" HorizontalAlignment="Left" />
 
             <StackPanel Orientation="vertical" Margin="0,40,0,0" Spacing="5">
-                <Image Source="Assets/TechWiki.png" HorizontalAlignment="Left" Width="120"/>
-                <TextBlock Text="markus@stulle.zone // samrtcontract.world" FontSize="13" FontStyle="Italic" Margin="0,0,0,0" HorizontalTextAlignment="Left"/>
+                <Image Source="Assets/StoreLogo.png" HorizontalAlignment="Left" Width="120"/>
+                <TextBlock Text="markus@stulle.zone // smartcontract.world" FontSize="13" FontStyle="Italic" Margin="0,0,0,0" HorizontalTextAlignment="Left"/>
+                <TextBlock x:Name="txtVersion" Text="Version 0.0.0.0" FontSize="13" FontStyle="Italic" Margin="0,0,0,0" HorizontalTextAlignment="Left"/>
             </StackPanel>
             
         </StackPanel>
