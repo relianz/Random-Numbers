@@ -1,7 +1,7 @@
 # Random-Numbers
 A quite simple [UWP](https://www.visualstudio.com/vs/features/universal-windows-platform/) application that can generate and statistically evaluate random numbers. The generator is selected at runtime via [strategy design pattern](https://en.wikipedia.org/wiki/Strategy_pattern). A two-dimensional graphic facilitates the recognition of recurring patterns in number sequences.
 
-![Screenshot](/180321_0643%20GUI.PNG)
+![Screenshot](/180321_2122%20GUI.PNG)
 ## Components used
 The implementation is based on these software components:
 * [UWP Community Toolkit](https://github.com/Microsoft/UWPCommunityToolkit) _(using the [RadialProgressBar](https://docs.microsoft.com/en-us/windows/uwpcommunitytoolkit/controls/radialprogressbar))_
