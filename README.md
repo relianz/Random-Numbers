@@ -14,12 +14,16 @@ Development has been done with [Microsoft Visual Studio Community 2017](https://
 The following limitations currently exist: 
 1. Poor estimation of variance 
 1. Constant size of image bitmap (512 x 512 pixels)
-1. Only two flavors of randomness: [System.Random](https://msdn.microsoft.com/en-us/library/system.random.aspx), [System.Security.Cryptography.RNGCryptoServiceProvider](https://msdn.microsoft.com/de-de/library/system.security.cryptography.rngcryptoserviceprovider.aspx)
+1. Only two flavors of randomness: [System.Random](https://msdn.microsoft.com/en-us/library/system.random.aspx) _(= Pseudo)_ and [System.Security.Cryptography.RNGCryptoServiceProvider](https://msdn.microsoft.com/de-de/library/system.security.cryptography.rngcryptoserviceprovider.aspx) _(= Secure)_
 1. No [software documentation](https://en.wikipedia.org/wiki/Software_documentation)
 1. Too much code behind
-1. Number generation single threaded
+1. Number generation just single threaded
+1. No [unit testing](https://en.wikipedia.org/wiki/Unit_testing)
+1. Not tested on platforms other than Windows 10 Professional _(x64)_
+
+But if experiments with random number generators are to be done quickly, then it does what it should.
 
 ## Author
-[Markus A. Stulle](mailto:markus@stulle.zone) // [smartcontract.world](https://smartcontract.world)
+[Markus A. Stulle](mailto:markus@stulle.zone) // [smartcontract.world](https://smartcontract.world) | Munich, March 2018.
 
 
