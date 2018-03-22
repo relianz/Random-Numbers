@@ -26,7 +26,6 @@ The implementation is based on these software components:
 
 ## Limitations
 The following limitations currently exist: 
-1. Poor estimation of variance 
 1. Constant size of image bitmap (512 x 512 pixels)
 1. Only two flavors of randomness: [System.Random](https://msdn.microsoft.com/en-us/library/system.random.aspx) _(= Pseudo)_ and [System.Security.Cryptography.RNGCryptoServiceProvider](https://msdn.microsoft.com/de-de/library/system.security.cryptography.rngcryptoserviceprovider.aspx) _(= Secure)_
 1. No [software documentation](https://en.wikipedia.org/wiki/Software_documentation)
