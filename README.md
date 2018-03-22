@@ -2,10 +2,15 @@
 A quite simple [UWP](https://www.visualstudio.com/vs/features/universal-windows-platform/) application that can generate and statistically evaluate random numbers. The generator is selected at runtime via [strategy design pattern](https://en.wikipedia.org/wiki/Strategy_pattern). A two-dimensional graphic facilitates the recognition of recurring patterns in number sequences.
 
 ![Screenshot](/180321_2122%20GUI.PNG)
-## Components used
-The implementation is based on these software components:
-* [UWP Community Toolkit](https://github.com/Microsoft/UWPCommunityToolkit) _(using the [RadialProgressBar](https://docs.microsoft.com/en-us/windows/uwpcommunitytoolkit/controls/radialprogressbar))_
-* [WinRT XAML Toolkit](https://github.com/xyzzer/WinRTXamlToolkit) _(for the binning chart diagram)_
+## Building the program
+The executable program can be built in five steps:
+1. Clone the repository. Personally, I like to use [SourceTree](https://www.sourcetreeapp.com/) as a free git client.
+1. Open the solution file [RandomNumbers.sln](RandomNumbers/RandomNumbers.sln) with Visual Studio.  
+**Note**: UWP applications cannot be created from UNC paths _(Visual Studio reports „DEP0700: Registration of the app failed. [0x80073CF0] error 0x80070003“)_.
+1. Using the NuGet package manager:    
+Add the components `Microsoft.NETCore.UniversalWindowsPlatform`, `Microsoft.Toolkit.Uwp.UI.Controls`, and `WinRTXamlToolkit.Controls.DataVisualization.UWP`.
+1. Select configuration, e.g. _Debug/x64_.
+1. Press `F5`.
 
 ## Development tools
 ### Software design
@@ -13,6 +18,11 @@ When designing the software, a Wacom Intuos graphics tablet and [Bamboo Paper](h
 
 ### Implementation
 Implementation has been done with [Microsoft Visual Studio Community 2017](https://www.visualstudio.com/vs/community) _(Version 15.6.3)_ on platform Windows 10 Professional _(Version 1709)_. However, the latest C# features are not used. 
+
+### Components used
+The implementation is based on these software components:
+* [UWP Community Toolkit](https://github.com/Microsoft/UWPCommunityToolkit) _(using the [RadialProgressBar](https://docs.microsoft.com/en-us/windows/uwpcommunitytoolkit/controls/radialprogressbar))_
+* [WinRT XAML Toolkit](https://github.com/xyzzer/WinRTXamlToolkit) _(for the binning chart diagram)_
 
 ## Limitations
 The following limitations currently exist: 
