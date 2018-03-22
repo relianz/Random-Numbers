@@ -31,7 +31,7 @@ Add a list element representing the random number generator to the `rngSelector`
 1. In [MainPage.xaml.cs](RandomNumbers/RandomNumbers/MainPage.xaml.cs):  
 Extend the `switch (idx)` statement in the callback function `Button_Click`. The function starts or cancels the generation of random numbers in a separate thread.
 
-An excellent explanantion of the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) can be found in [Head First Design Patterns](http://wickedlysmart.com/head-first-design-patterns/).
+I don't want to advertise here, but [Head First Design Patterns](http://wickedlysmart.com/head-first-design-patterns/) gives a very good introduction to the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern). I like this book very much.
 
 ## Author
 [Markus A. Stulle](mailto:markus@stulle.zone) // [smartcontract.world](https://smartcontract.world) | Munich, March 2018.
