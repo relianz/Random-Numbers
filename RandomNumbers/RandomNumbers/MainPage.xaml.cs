@@ -215,7 +215,7 @@ namespace RandomNumbers
 
                 // Reset image:
                 viewModel.PixelTested = 0L;
-                viewModel.PixelSet = 0;
+                viewModel.PixelSet = 0L;
 
                 ClearImage();
                 WriteImageToBitmap();
@@ -245,6 +245,10 @@ namespace RandomNumbers
             // Display results:
             cs.ItemsSource = binning;
             WriteImageToBitmap();
+
+            averageText.Text  = viewModel.Average.ToString( "0.########" );
+            varianceText.Text = viewModel.Variance.ToString( "0.########" );
+            rndMatches.Text   = viewModel.PixelSet.ToString();
 
             startStopButton.Content = "Start Generation";
             IsRunning = false;
