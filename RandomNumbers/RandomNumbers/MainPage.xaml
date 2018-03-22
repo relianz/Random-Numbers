@@ -88,7 +88,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      Width="90" HorizontalAlignment="Left" />
 
                 <ToggleSwitch x:Name="minMaxDefaults" Header="Default values" Margin="10,0,0,0"
-                              OffContent="Off" OnContent="On" Toggled="minMaxDefaults_Toggled"/>
+                              OffContent="Off" OnContent="On" Toggled="MinMaxDefaults_Toggled"/>
                 
             </StackPanel>
             

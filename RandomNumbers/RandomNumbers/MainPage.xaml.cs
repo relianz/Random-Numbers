@@ -41,29 +41,7 @@ namespace RandomNumbers
 {
     public sealed partial class MainPage : Page
     {
-        private RandomNumberBin[] binning;
-        private RNG rng;
-
-        private int numOfBins;
-
-        private double dmin;
-        private double dmax;
-        private double delta;
-
-        private double averagePrev;
-
-        private int rndBitmapWidth;
-        private int rndBitmapHeight;
-        private byte[] imageArray;
-
-        private ColumnSeries cs;
-        private Boolean isRunning;
-        private Task runner;
-        private Stopwatch watch;
-        private const string unit = " [1/s]";
-
-        private ViewModel viewModel;
-
+        #region Public members
         public MainPage()
         {
             this.InitializeComponent();
@@ -110,6 +88,20 @@ namespace RandomNumbers
 
         } // ctor MainPage
 
+        public string GetAttributeValueFromAssy( string name )
+        {
+            Assembly currentAssembly = typeof( App ).GetTypeInfo().Assembly;
+
+            var customAttributes = currentAssembly.CustomAttributes;
+            var list = customAttributes.ToList();
+
+            var result = list.FirstOrDefault( x => x.AttributeType.Name == name );
+            var value = result.ConstructorArguments[ 0 ].Value;
+
+            return (string)value;
+
+        } // GetAttributeValueFromAssy
+        
         #region Getter/Setter
         public int NumOfBins { get => numOfBins; set => numOfBins = value; }
         public double Dmin { get => dmin; set => dmin = value; }
@@ -126,18 +118,36 @@ namespace RandomNumbers
         public int RndBitmapHeight { get => rndBitmapHeight; set => rndBitmapHeight = value; }
         #endregion
 
+        #endregion
+
+        #region Private members
+        private RandomNumberBin[] binning;
+        private RNG rng;
+
+        private int numOfBins;
+
+        private double dmin;
+        private double dmax;
+        private double delta;
+
+        private double averagePrev;
+
+        private int rndBitmapWidth;
+        private int rndBitmapHeight;
+        private byte[] imageArray;
+
+        private ColumnSeries cs;
+        private Boolean isRunning;
+        private Task runner;
+        private Stopwatch watch;
+        private const string unit = " [1/s]";
+
+        private ViewModel viewModel;
+
         private CancellationTokenSource tokenSource;
         private CancellationToken token;
 
-        private double Scale( long l, long lmax, long lmin, double dmax, double dmin )
-        {
-            double r = ((double)(l - lmin) / (double)(lmax - lmin)) * (dmax - dmin) + dmin;
-
-            return r;
-
-        } // scale
-
-        private void minMaxDefaults_Toggled( object sender, RoutedEventArgs e )
+        private void MinMaxDefaults_Toggled( object sender, RoutedEventArgs e )
         {
             ToggleSwitch toggleSwitch = sender as ToggleSwitch;
             if (toggleSwitch != null)
@@ -258,7 +268,7 @@ namespace RandomNumbers
                 int li = Rng.GetRandomNumer( viewModel.Lmin, viewModel.Lmax );
                 long l = (long)li;
 
-                double r = Scale( l, viewModel.Lmax, viewModel.Lmin, Dmax, Dmin );
+                double r = Statistics.Scale( l, viewModel.Lmax, viewModel.Lmin, Dmax, Dmin );
 
                 // Compute offset in bitmap:
                 nextP = OffsetInBitmap( RndBitmapWidth, RndBitmapHeight, viewModel.NumOfRandomNumbers, k );
@@ -388,21 +398,7 @@ namespace RandomNumbers
             rndBitmap.Source = _wb;
 
         } // WriteImageToBitmap
-
-
-        public string GetAttributeValueFromAssy( string name )
-        {
-            Assembly currentAssembly = typeof( App ).GetTypeInfo().Assembly;
-
-            var customAttributes = currentAssembly.CustomAttributes;
-            var list = customAttributes.ToList();
-            
-            var result = list.FirstOrDefault( x => x.AttributeType.Name == name );
-            var value  = result.ConstructorArguments[ 0 ].Value;
-
-            return (string)value;
-
-        } // GetAttributeValueFromAssy
+        #endregion
 
     } // class MainPage
 

@@ -53,6 +53,14 @@ namespace RandomNumbers
 
         } // UpdateVariance
 
+        public static double Scale( long l, long lmax, long lmin, double dmax, double dmin )
+        {
+            double r = ((double)(l - lmin) / (double)(lmax - lmin)) * (dmax - dmin) + dmin;
+
+            return r;
+
+        } // Scale
+
     } // class Statistics
 
 } // namespace RandomNumbers
