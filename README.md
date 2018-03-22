@@ -23,6 +23,16 @@ The following limitations currently exist:
 
 But if experiments with random number generators are to be done quickly, then it does what it should.
 
+### Adding a random number generator
+A new random number generator is added in three steps:
+1. Define a class that implements the [IRandomness](RandomNumbers/RandomNumbers/Randomness.cs) interface. Take the definition of [SecureRandomness](RandomNumbers/RandomNumbers/SecureRandomness.cs) as an example.
+1. In [MainPage.xaml](RandomNumbers/RandomNumbers/MainPage.xaml):  
+Add a list element representing the random number generator to the `rngSelector` combo box.
+1. In [MainPage.xaml.cs](RandomNumbers/RandomNumbers/MainPage.xaml.cs):  
+Extend the `switch (idx)` statement in the callback function `Button_Click`. The function starts or cancels the generation of random numbers in a separate thread.
+
+An excellent explanantion of the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern) can be found in [Head First Design Patterns](http://wickedlysmart.com/head-first-design-patterns/).
+
 ## Author
 [Markus A. Stulle](mailto:markus@stulle.zone) // [smartcontract.world](https://smartcontract.world) | Munich, March 2018.
 
