@@ -8,7 +8,11 @@ The implementation is based on these software components:
 * [WinRT XAML Toolkit](https://github.com/xyzzer/WinRTXamlToolkit) _(for the binning chart diagram)_
 
 ## Development tools
-Development has been done with [Microsoft Visual Studio Community 2017](https://www.visualstudio.com/vs/community) on a Windows 10 Skylake machine. 
+### Software design
+When designing the software, a Wacom Intuos graphics tablet and [Bamboo Paper](https://www.wacom.com/en/products/apps-services/bamboo-paper) were very pleasant companions - I will never use real paper again in this development phase! The draft works are recorded in the document [RandomNumbers.will](RandomNumbers.will), unfortunately mostly in German, I apologize.
+
+### Implementation
+Implementation has been done with [Microsoft Visual Studio Community 2017](https://www.visualstudio.com/vs/community) _(Version 15.6.3)_ on platform Windows 10 Professional _(Version 1709)_. However, the latest C# features are not used. 
 
 ## Limitations
 The following limitations currently exist: 
