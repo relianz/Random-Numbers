@@ -105,6 +105,7 @@
     <Compile Include="Randomness.cs" />
     <Compile Include="RNG.cs" />
     <Compile Include="SecureRandomness.cs" />
+    <Compile Include="Statistics.cs" />
     <Compile Include="ViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -137,28 +137,6 @@ namespace RandomNumbers
 
         } // scale
 
-        private void UpdateAverage( long k, double x )
-        {
-            double w = 1.0d / k;
-            double m = w * (x + (k - 1) * viewModel.Average);
-
-            // Store average value of last step, 
-            // we need this for recursive computation of variance:
-            AveragePrev = viewModel.Average;
-            viewModel.Average = m;
-
-        } // UpdateAverage
-
-        private void UpdateVariance( long k, double x )
-        {
-            double w = k / (double)(k + 1);
-            double d = viewModel.Average * viewModel.Average - 2 * viewModel.Average * AveragePrev + AveragePrev * AveragePrev;
-            double s = viewModel.Variance + w * d;
-
-            viewModel.Variance = s;
-
-        } // UpdateVariance
-
         private void minMaxDefaults_Toggled( object sender, RoutedEventArgs e )
         {
             ToggleSwitch toggleSwitch = sender as ToggleSwitch;
@@ -293,8 +271,9 @@ namespace RandomNumbers
                 }
 
                 // Update statistics:
-                UpdateAverage( k + 1, r );
-                UpdateVariance( k + 1, r );
+                AveragePrev = viewModel.Average;
+                viewModel.Average  = Statistics.UpdateAverage( k + 1, AveragePrev, r );
+                viewModel.Variance = Statistics.UpdateVariance( k + 1, viewModel.Variance, r, AveragePrev, viewModel.Average );
 
                 // Find index of bin:
                 int i = (int)((r - Dmin) / Delta);

@@ -21,14 +21,38 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
+using System; // ArgumentOutOfRangeException
+
 namespace RandomNumbers
 {
-    public interface IRandomness
+    class Statistics
     {
-        int RandomNumber( int min, int max );
-        
-    } // IRandomness
+        public static double UpdateAverage( long k, double average, double value )
+        {
+            if( k <= 0 ) {
+                throw new ArgumentOutOfRangeException( "Argument k must be positive value (" + k + ")" );
+            }
+
+            double w = 1.0d / k;
+            double d = w * (value + (k - 1) * average);
+
+            return d;
+
+        } // UpdateAverage
+
+        public static double UpdateVariance( long k, double varianceSqr, double value, double average0, double average1 )
+        {
+            if (k <= 0) {
+                throw new ArgumentOutOfRangeException( "Argument k must be positive value (" + k + ")" );
+            }
+
+            double w = 1.0d - (1.0d / k);
+            double s = w * varianceSqr + (k + 1) * (average1 - average0) * (average1 - average0);
+
+            return s;
+
+        } // UpdateVariance
+
+    } // class Statistics
 
 } // namespace RandomNumbers
-
-/* [EOF] */
