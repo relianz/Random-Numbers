@@ -1,5 +1,5 @@
 # Random-Numbers
-A quite simple [UWP](https://www.visualstudio.com/vs/features/universal-windows-platform/) application that can generate and statistically evaluate random numbers. The generator is selected at runtime via [strategy design pattern](https://en.wikipedia.org/wiki/Strategy_pattern). A two-dimensional graphic facilitates the recognition of recurring patterns in number sequences.
+A quite simple [UWP](https://www.visualstudio.com/vs/features/universal-windows-platform/) application implemented in C# that can generate and statistically evaluate random numbers. The generator is selected at runtime via [strategy design pattern](https://en.wikipedia.org/wiki/Strategy_pattern). A two-dimensional graphic facilitates the recognition of recurring patterns in number sequences.
 
 ![Screenshot](/180322_1701%20GUI.PNG)
 ## Building the program
