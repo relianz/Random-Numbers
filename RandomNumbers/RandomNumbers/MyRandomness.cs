@@ -21,29 +21,41 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-using System.Reflection;
-using System.Runtime.InteropServices;
+using System; // ArgumentOutOfRangeException
 
-[assembly: AssemblyTitle("RandomNumbers")]
-[assembly: AssemblyDescription("UWP application for random number experiments")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dr.-Ing. Markus A. Stulle GbR")]
-[assembly: AssemblyProduct("RandomNumbers")]
-[assembly: AssemblyCopyright( "Copyright © Dr.-Ing. Markus A. Stulle GbR 2018" )]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+namespace RandomNumbers
+{
+    class MyRandomness : IRandomness
+    {
+        private int number;
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-//
-[assembly: AssemblyVersion("0.9.1.0")]
-[assembly: AssemblyFileVersion("0.9.1.0")]
-[assembly: ComVisible(false)]
+        private const int a = 1103515245;
+        private const int c = 12345;
+        private const int m = Int32.MaxValue;
+
+        public MyRandomness( int seed = 0) => this.number = seed;
+
+        public int RandomNumber( int min, int max )
+        {
+            if (min > max)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            long r = a * number + c;
+            if (r < 0L)
+                r = -r;
+
+            number = (int)(r % m);
+            
+            int value = number % max + min;
+
+            return value;
+
+        } // IRandomness.RandomNumber
+
+    } // class PseudoRandomness
+
+} // namespace RandomNumbers
+
+/* [EOF] */

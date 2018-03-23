@@ -195,6 +195,10 @@ namespace RandomNumbers
                         break;
 
                     case 2:
+                        Rng.Randomness = new MyRandomness();
+                        break;
+
+                    case 3:
                         Rng.Randomness = new NoRandomness();
                         break;
 
@@ -265,6 +269,7 @@ namespace RandomNumbers
 
             int p = -1;
             int nextP = 0;
+            Boolean randomNumberMatch = false;
 
             // Create random numbers:
             for (long k = 0; k < viewModel.NumOfRandomNumbers; k++)
@@ -276,13 +281,34 @@ namespace RandomNumbers
 
                 // Compute offset in bitmap:
                 nextP = OffsetInBitmap( RndBitmapWidth, RndBitmapHeight, viewModel.NumOfRandomNumbers, k );
+
+                // Next pixel reached?
                 if (nextP > p)
                 {
                     p = nextP;
-                    SetPixel( p, li );
+                    SetPixelNoMatch( p );
+                    randomNumberMatch = false;
+                    
+                } // next pixel reached
+
+                if (!randomNumberMatch)
+                {
+                    if (li == viewModel.RndEquals)
+                    {
+#if DEBUG
+                        // compute coordinates (for debugging purposes):
+                        int y = p / RndBitmapWidth;
+                        int x = p - (RndBitmapWidth * y);
+#endif
+                        randomNumberMatch = true;
+                        SetPixelMatch( p );
+
+                        viewModel.PixelSet++;
+                    }
 
                     viewModel.PixelTested++;
-                }
+
+                } // !randomNumberMatch 
 
                 // Update estimations of expected value and variance:
                 AveragePrev = viewModel.Average;
@@ -346,42 +372,41 @@ namespace RandomNumbers
 
         private static int OffsetInBitmap( int w, int h, long N, long k )
         {
-            double nom = (w * h - 1);
-            double denom = (N - 1);
+            double nom   = (w * h - 1.0d);
+            double denom = (N - 1.0d);
 
             double p = (nom / denom) * k;
-
-            return (int)Math.Floor( p );
+            int offset = (int)Math.Floor( p );
+#if DEBUG
+            ;
+#endif
+            return offset;
 
         } // OffsetInBitmap
 
-        private void SetPixel( int offset, int rnd )
-        {
-            int y = offset / RndBitmapWidth;
-            int x = offset - (RndBitmapWidth * y);
-
+        private void SetPixelMatch( int offset )
+        {           
             int index = 4 * offset;
 
-            if (rnd == viewModel.RndEquals)
-            {
-                // Match - set a white pixel:
-                imageArray[ index ] = 255;        // Blue
-                imageArray[ index + 1 ] = 255;    // Green
-                imageArray[ index + 2 ] = 255;    // Red
-                imageArray[ index + 3 ] = 255;    // Intensity?
+            // Set a white pixel:
+            imageArray[ index ] = 255;        // Blue
+            imageArray[ index + 1 ] = 255;    // Green
+            imageArray[ index + 2 ] = 255;    // Red
+            imageArray[ index + 3 ] = 255;    // Intensity?
 
-                viewModel.PixelSet++;
-            }
-            else
-            {
-                // No match - set a black pixel:
-                imageArray[ index ] = 0;
-                imageArray[ index + 1 ] = 0;
-                imageArray[ index + 2 ] = 0;
-                imageArray[ index + 3 ] = 255;
-            }
+        } // SetPixelMatch
 
-        } // SetPixel
+        private void SetPixelNoMatch( int offset )
+        {
+            int index = 4 * offset;
+
+            // Set a black pixel:
+            imageArray[ index ] = 0;
+            imageArray[ index + 1 ] = 0;
+            imageArray[ index + 2 ] = 0;
+            imageArray[ index + 3 ] = 255;
+
+        } // SetPixelNoMatch
 
         private void ClearImage()
         {
@@ -402,7 +427,7 @@ namespace RandomNumbers
             rndBitmap.Source = _wb;
 
         } // WriteImageToBitmap
-        #endregion
+#endregion
 
     } // class MainPage
 

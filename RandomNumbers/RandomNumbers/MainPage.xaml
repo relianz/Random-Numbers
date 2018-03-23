@@ -95,6 +95,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <ComboBox x:Name="rngSelector" Header="Random number generator" HorizontalAlignment="Left">
                 <ComboBoxItem Content="Pseudo" IsSelected="True"/>
                 <ComboBoxItem Content="Secure"/>
+                <ComboBoxItem Content="My"/>
                 <ComboBoxItem Content="No"/>
             </ComboBox>
 
