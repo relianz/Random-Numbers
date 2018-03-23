@@ -24,6 +24,25 @@ The implementation is based on these software components:
 * [UWP Community Toolkit](https://github.com/Microsoft/UWPCommunityToolkit) _(using the [RadialProgressBar](https://docs.microsoft.com/en-us/windows/uwpcommunitytoolkit/controls/radialprogressbar))_
 * [WinRT XAML Toolkit](https://github.com/xyzzer/WinRTXamlToolkit) _(for the binning chart diagram)_
 
+## Mathematics
+### Scaling of numbers 
+The program scales an integer random value `l` generated in the closed interval `[lmin, lmax]` to the floating point interval `[dmin, dmax]`. The two interval limits are currently defined as constant values `0.0d` and `1.0d`. Scaling is performed by the static method `RandomNumbers.Statistics.Scale()`.
+
+### Binning
+The scaled random numbers are divided into `numOfBins = 50` intervals. Each interval no. `i` contains random numbers in the half-open range `[dmin + i*δ, dmin + (i + 1)*δ)` with `δ = (dmax - dmin)/numOfBins`. 
+
+### Estimation of stochastic quantities
+The expected value `m` = **μ** of the scaled random numbers is calculated using the recursion formula `m<k> = (1/k)*(x<k> + (k-1)*m<k-1>)` where `x<k>` is the new random number generated. 
+
+The variance `s` = **σ*σ** of the random numbers is also calculated recursively using `s<k> = (1-(1/k))*s<k-1> + (k+1)*SQR(m<k> - m<k-1>)` where `SQR` denotes squaring. The newly generated random number `x<k>` is only included in this formula indirectly via the new estimate `m<k>` of the expected value, which must therefore be calculated before the variance is updated:
+
+    // Update estimations of expected value and variance:
+    AveragePrev = viewModel.Average;
+    viewModel.Average  = Statistics.UpdateAverage( k + 1, AveragePrev, r );
+    viewModel.Variance = Statistics.UpdateVariance( k + 1, viewModel.Variance, AveragePrev, viewModel.Average );
+
+The estimates are implemented as static methods in the class `RandomNumbers.Statistics`.
+
 ## Limitations
 The following limitations currently exist: 
 1. Constant size of image bitmap (512 x 512 pixels)
