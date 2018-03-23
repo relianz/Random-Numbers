@@ -36,7 +36,7 @@ namespace RandomNumbers
             if (min > max) {
                 throw new ArgumentOutOfRangeException();
             }
-            return (int)Math.Floor( (min + ((double)max - min) * NextDouble()) );
+            return (int)Math.Floor( (min + ((double)(max + 1 - min)) * NextDouble()) );
 
         } // IRandomness.RandomNumber
 

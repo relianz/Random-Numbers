@@ -33,7 +33,8 @@ namespace RandomNumbers
                 throw new ArgumentOutOfRangeException();
             }
 
-            return base.Next( min, max );
+            // https://docs.microsoft.com/de-de/dotnet/api/system.random.next?view=netframework-4.7.1#System_Random_Next_System_Int32_System_Int32_
+            return base.Next( min, max + 1 );
         }
 
     } // class PseudoRandomness
