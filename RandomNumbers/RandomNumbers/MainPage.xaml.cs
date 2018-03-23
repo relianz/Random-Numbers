@@ -55,8 +55,8 @@ namespace RandomNumbers
             NumOfBins = 50;
 
             // Must adjust output formatting of average and variance if intervall changed:
-            Dmin = 0.0;
-            Dmax = 1.0;
+            Dmin = 0.0d;
+            Dmax = 1.0d;
             Delta = (Dmax - Dmin) / NumOfBins;
 
             // Create bins to count frequencies:
@@ -284,10 +284,10 @@ namespace RandomNumbers
                     viewModel.PixelTested++;
                 }
 
-                // Update statistics:
+                // Update estimations of expected value and variance:
                 AveragePrev = viewModel.Average;
                 viewModel.Average  = Statistics.UpdateAverage( k + 1, AveragePrev, r );
-                viewModel.Variance = Statistics.UpdateVariance( k + 1, viewModel.Variance, r, AveragePrev, viewModel.Average );
+                viewModel.Variance = Statistics.UpdateVariance( k + 1, viewModel.Variance, AveragePrev, viewModel.Average );
 
                 // Find index of bin:
                 int i = (int)((r - Dmin) / Delta);

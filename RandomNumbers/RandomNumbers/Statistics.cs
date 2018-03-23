@@ -40,7 +40,7 @@ namespace RandomNumbers
 
         } // UpdateAverage
 
-        public static double UpdateVariance( long k, double varianceSqr, double value, double average0, double average1 )
+        public static double UpdateVariance( long k, double varianceSqr, double average0, double average1 )
         {
             if (k <= 0) {
                 throw new ArgumentOutOfRangeException( "Argument k must be positive value (" + k + ")" );
