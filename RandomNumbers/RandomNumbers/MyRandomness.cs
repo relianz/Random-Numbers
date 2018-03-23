@@ -29,9 +29,18 @@ namespace RandomNumbers
     {
         private ulong number;
 
-        private const int a = 1103515245;
-        private const int c = 12345;
-        private const ulong m = (System.UInt64)Int32.MaxValue + 1;
+        // constant values 
+        // from https://en.wikipedia.org/wiki/Linear_congruential_generator#cite_note-9
+        //
+        private const int a = 1103515245;                           // multiplier
+        private const int c = 12345;                                // increment
+        private const ulong m = (System.UInt64)Int32.MaxValue + 1;  // modulus
+
+        // from https://docs.microsoft.com/de-de/dotnet/api/system.int32?view=netframework-4.7.1
+        //
+        // Int32 is an immutable value type that represents signed integers with values 
+        // that range from negative 2,147,483,648 (which is represented by the Int32.MinValue constant) 
+        // through positive 2,147,483,647 (which is represented by the Int32.MaxValue constant.
 
         public MyRandomness( int seed = 0 )
         {
@@ -41,24 +50,35 @@ namespace RandomNumbers
 
         public int RandomNumber( int min, int max )
         {
-            int delta;
+            ulong delta;
             if (min > max)
             {
                 throw new ArgumentOutOfRangeException();
             }
             else
             {
-                delta = max - min; // 60 - (-40) == 100, 60 - 40 == 20, 60 - 0 == 60, -40 - (-60) == 20
+                delta = (ulong)(max - min); // 60 - (-40) == 100, 60 - 40 == 20, 60 - 0 == 60, -40 - (-60) == 20
             }
                
             ulong r = a * number + c;
             number  = r % m;
-
-            int value = ((int)number % (delta + 1)) + min;
+            
+            int value = ScaleNumber( min, max );
 
             return value;
 
         } // IRandomness.RandomNumber
+
+        private int ScaleNumber( int min, int max )
+        {
+            double w = number / (m - 1.0d);            
+            double d = max - min;
+
+            int n = (int)Math.Round( w*d ) + min;
+
+            return n;
+
+        } // Scale
 
     } // class PseudoRandomness
 
