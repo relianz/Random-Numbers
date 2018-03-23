@@ -27,28 +27,34 @@ namespace RandomNumbers
 {
     class MyRandomness : IRandomness
     {
-        private int number;
+        private ulong number;
 
         private const int a = 1103515245;
         private const int c = 12345;
-        private const int m = Int32.MaxValue;
+        private const ulong m = (System.UInt64)Int32.MaxValue + 1;
 
-        public MyRandomness( int seed = 0) => this.number = seed;
+        public MyRandomness( int seed = 0 )
+        {
+            number = (ulong)seed;
+
+        } // ctor
 
         public int RandomNumber( int min, int max )
         {
+            int delta;
             if (min > max)
             {
                 throw new ArgumentOutOfRangeException();
             }
+            else
+            {
+                delta = max - min; // 60 - (-40) == 100, 60 - 40 == 20, 60 - 0 == 60, -40 - (-60) == 20
+            }
+               
+            ulong r = a * number + c;
+            number  = r % m;
 
-            long r = a * number + c;
-            if (r < 0L)
-                r = -r;
-
-            number = (int)(r % m);
-            
-            int value = number % max + min;
+            int value = ((int)number % (delta + 1)) + min;
 
             return value;
 
