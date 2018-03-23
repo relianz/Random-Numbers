@@ -54,24 +54,33 @@ The estimates are implemented as static methods in the class `RandomNumbers.Stat
 ## Limitations
 The following limitations currently exist: 
 1. Constant size of image bitmap (512 x 512 pixels)
-1. Only two flavors of randomness: [System.Random](https://msdn.microsoft.com/en-us/library/system.random.aspx) _(= Pseudo)_ and [System.Security.Cryptography.RNGCryptoServiceProvider](https://msdn.microsoft.com/de-de/library/system.security.cryptography.rngcryptoserviceprovider.aspx) _(= Secure)_
+1. Constant number of bins (50)
 1. No [software documentation](https://en.wikipedia.org/wiki/Software_documentation)
-1. Too much code behind
+1. Still too much code behind
 1. Number generation just single threaded
 1. No [unit testing](https://en.wikipedia.org/wiki/Unit_testing)
 1. Not tested on platforms other than Windows 10 Professional _(x64)_
+1. No performance optimization - there are many intermediate calculations for debugging purposes. 
 
 But if experiments with random number generators are to be done quickly, then it does what it should.
 
 ### Adding a random number generator
-A new random number generator is added in three steps:
-1. Define a class that implements the [IRandomness](RandomNumbers/RandomNumbers/Randomness.cs) interface. Take the definition of [SecureRandomness](RandomNumbers/RandomNumbers/SecureRandomness.cs) as an example.
+There are two behaviors of randomness implemented: [System.Random](https://msdn.microsoft.com/en-us/library/system.random.aspx) _(= Pseudo)_ and [System.Security.Cryptography.RNGCryptoServiceProvider](https://msdn.microsoft.com/de-de/library/system.security.cryptography.rngcryptoserviceprovider.aspx) _(= Secure)_. Another random number generator is provided in three steps:
+1. Define a class that implements the [IRandomness](RandomNumbers/RandomNumbers/Randomness.cs) interface. Please take the definition of [MyRandomness](RandomNumbers/RandomNumbers/MyRandomness.cs) as an example.
 1. In [MainPage.xaml](RandomNumbers/RandomNumbers/MainPage.xaml):  
 Add a list element representing the random number generator to the `rngSelector` combo box.
 1. In [MainPage.xaml.cs](RandomNumbers/RandomNumbers/MainPage.xaml.cs):  
 Extend the `switch (idx)` statement in the callback function `Button_Click`. The function starts or cancels the generation of random numbers in a separate thread.
 
+Observe the distribution of the white pixels in the graphic: If patterns are recognizable, the generator still offers room for improvement. 
+
+## Acknowledgement
 I don't want to advertise here, but [Head First Design Patterns](http://wickedlysmart.com/head-first-design-patterns/) gives a very good introduction to the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern). I like this book very much.
+
+## Wikipedia articles 
+* [Linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator)
+* [Expected value](https://en.wikipedia.org/wiki/Expected_value)
+* [Variance](https://en.wikipedia.org/wiki/Variance)
 
 ## Author
 [Markus A. Stulle](mailto:markus@stulle.zone) // [smartcontract.world](https://smartcontract.world) | Munich, March 2018.
