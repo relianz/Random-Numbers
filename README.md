@@ -75,7 +75,7 @@ Extend the `switch (idx)` statement in the callback function `Button_Click`. The
 Observe the distribution of the white pixels in the graphic: If patterns are recognizable, the generator still offers room for improvement. 
 
 #### RNG of GNU C Library ####
-For the implementation of `MyRandomness` I took from [Wikipedia](https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use) the parameters `a` _(= multiplier)_, `c` _(= increment)_ and `m` _(= modulus)_ of the congruence generator
+For the implementation of `MyRandomness` I took from [Wikipedia](https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use) the parameters `a` _(= multiplier)_, `c` _(= increment)_, and `m` _(= modulus)_ of the linear congruential generator
 
     x<k+1> = (a*x<k> + c) % m
     
