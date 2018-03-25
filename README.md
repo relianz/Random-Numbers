@@ -74,6 +74,17 @@ Extend the `switch (idx)` statement in the callback function `Button_Click`. The
 
 Observe the distribution of the white pixels in the graphic: If patterns are recognizable, the generator still offers room for improvement. 
 
+#### RNG of GNU C Library ####
+For the implementation of `MyRandomness` I took from [Wikipedia](https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use) the parameters `a` _(= multiplier)_, `c` _(= increment)_ and `m` _(= modulus)_ of the congruence generator
+
+    x<k+1> = (a*x<k> + c) % m
+    
+which is part of the GNU C Library:
+ 
+    a = 1,103,515,245 
+    c = 12,345
+    m = 2**31 = Int32.MaxValue + 1
+    
 ## Acknowledgement
 I don't want to advertise here, but [Head First Design Patterns](http://wickedlysmart.com/head-first-design-patterns/) gives a very good introduction to the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern). I like this book very much.
 
