@@ -40,7 +40,7 @@ namespace RandomNumbers
         //
         // Int32 is an immutable value type that represents signed integers with values 
         // that range from negative 2,147,483,648 (which is represented by the Int32.MinValue constant) 
-        // through positive 2,147,483,647 (which is represented by the Int32.MaxValue constant.
+        // through positive 2,147,483,647 (which is represented by the Int32.MaxValue constant).
 
         public MyRandomness( int seed = 0 )
         {

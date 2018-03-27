@@ -60,25 +60,10 @@ namespace RandomNumbers
             Delta = (Dmax - Dmin) / NumOfBins;
 
             // Create bins to count frequencies:
-            binning = new RandomNumberBin[ NumOfBins ];
-
-            for (int i = 0; i < NumOfBins; i++)
-            {
-                double lower = i * Delta;
-                double upper = lower + Delta;
-                string name = i.ToString();
-
-                binning[ i ] = new RandomNumberBin()
-                {
-                    Lower = lower,
-                    Upper = upper,
-                    Name = name
-                };
-
-            } // for all bins
+            binning = new Binning( NumOfBins, Dmin, Dmax );
 
             cs = ColumnChart.Series[ 0 ] as ColumnSeries;
-            cs.ItemsSource = binning;
+            cs.ItemsSource = binning.Bins;
             cs.Title = "Frequency";
 
             Rng = new SampleRNG();
@@ -121,7 +106,7 @@ namespace RandomNumbers
         #endregion
 
         #region Private members
-        private RandomNumberBin[] binning;
+        private Binning binning;
         private RNG rng;
 
         private int numOfBins;
@@ -213,10 +198,6 @@ namespace RandomNumbers
                 long frequency = Stopwatch.Frequency;
                 long nanosecPerTick = (1000L * 1000L * 1000L) / frequency;
 
-                // Clear bins:
-                for (int i = 0; i < binning.Length; i++)
-                    binning[ i ].Amount = 0L;
-
                 // Reset image:
                 viewModel.PixelTested = 0L;
                 viewModel.PixelSet = 0L;
@@ -230,6 +211,7 @@ namespace RandomNumbers
 
                 viewModel.PercentageDone = 0;
                 startStopButton.Content = "Stop Generation";
+                binning.Clear();
                 cs.ItemsSource = null;
                 IsRunning = true;
 
@@ -247,7 +229,7 @@ namespace RandomNumbers
             }
 
             // Display results:
-            cs.ItemsSource = binning;
+            cs.ItemsSource = binning.Bins;
             WriteImageToBitmap();
 
             averageText.Text  = viewModel.Average.ToString( "0.########" );
@@ -315,12 +297,11 @@ namespace RandomNumbers
                 viewModel.Average  = Statistics.UpdateAverage( k + 1, AveragePrev, r );
                 viewModel.Variance = Statistics.UpdateVariance( k + 1, viewModel.Variance, AveragePrev, viewModel.Average );
 
-                // Find index of bin:
-                int i = (int)((r - Dmin) / Delta);
-                if (i == NumOfBins)
-                    i--;
-
-                binning[ i ].Amount++;
+                if (!binning.AddNumber( r ))
+#if DEBUG
+                    // breakpoint facility
+                    ;
+#endif
 
                 if (ct.IsCancellationRequested)
                 {
@@ -430,20 +411,6 @@ namespace RandomNumbers
 #endregion
 
     } // class MainPage
-
-    public class RandomNumberBin  
-    {
-        private double lower;
-        private double upper;
-        private long amount;
-        private string name;
-      
-        public double Lower { get => lower; set => lower = value; }
-        public double Upper { get => upper; set => upper = value; }
-        public long Amount { get => amount; set => amount = value; }
-        public string Name { get => name; set => name = value; }
-
-    } // class RandomNumberBin
 
 } // namepsace RandomNumbers
 
