@@ -29,7 +29,7 @@ The implementation is based on these software components:
 The program scales an integer random value `l` generated in the closed interval `[lmin, lmax]` to the floating point interval `[dmin, dmax]`. The two interval limits are currently defined as constant values `0.0d` and `1.0d`. Scaling is performed by the static method `RandomNumbers.Statistics.Scale()`.
 
 ### Binning
-The scaled random numbers are divided into `numOfBins = 50` intervals. Each interval no. `i` contains random numbers in the half-open range `[dmin + i*δ, dmin + (i + 1)*δ)` with `δ = (dmax - dmin)/numOfBins`. 
+The scaled random numbers are divided into `numOfBins = 50` intervals defined in class [Binning](RandomNumbers/RandomNumbers/Binning.cs). Each interval no. `i` contains random numbers in the half-open range `[dmin + i*δ, dmin + (i + 1)*δ)` with `δ = (dmax - dmin)/numOfBins`. 
 
 ### Estimation of stochastic quantities
 The expected value `m` = **μ** of the scaled random numbers is calculated using the recursion formula 
