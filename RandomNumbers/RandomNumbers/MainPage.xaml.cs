@@ -259,7 +259,11 @@ namespace RandomNumbers
                 int li = Rng.GetRandomNumer( viewModel.Lmin, viewModel.Lmax );
                 long l = (long)li;
 
-                double r = Statistics.Scale( l, viewModel.Lmax, viewModel.Lmin, Dmax, Dmin );
+                double r = Statistics.Scale( l, viewModel.Lmax, viewModel.Lmin, Dmax, Dmin );               
+                if( !binning.AddNumber( r ) )
+                {
+                    throw new InvalidOperationException( "Adding number to bin failed (" + r + ")" );
+                }
 
                 // Compute offset in bitmap:
                 nextP = OffsetInBitmap( RndBitmapWidth, RndBitmapHeight, viewModel.NumOfRandomNumbers, k );
@@ -296,12 +300,6 @@ namespace RandomNumbers
                 AveragePrev = viewModel.Average;
                 viewModel.Average  = Statistics.UpdateAverage( k + 1, AveragePrev, r );
                 viewModel.Variance = Statistics.UpdateVariance( k + 1, viewModel.Variance, AveragePrev, viewModel.Average );
-
-                if (!binning.AddNumber( r ))
-#if DEBUG
-                    // breakpoint facility
-                    ;
-#endif
 
                 if (ct.IsCancellationRequested)
                 {
@@ -408,7 +406,7 @@ namespace RandomNumbers
             rndBitmap.Source = _wb;
 
         } // WriteImageToBitmap
-#endregion
+        #endregion
 
     } // class MainPage
 

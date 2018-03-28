@@ -99,8 +99,8 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <ComboBoxItem Content="No"/>
             </ComboBox>
 
-            <TextBox x:Name="averageText"  IsReadOnly="True" Header="Average &#956;" Width="100" HorizontalAlignment="Left" />
-            <TextBox x:Name="varianceText" IsReadOnly="True" Header="Variance &#963;&#178;" Width="100" HorizontalAlignment="Left" />
+            <TextBox x:Name="averageText"  IsReadOnly="True" Header="Expected value &#956;" Width="130" HorizontalAlignment="Left" />
+            <TextBox x:Name="varianceText" IsReadOnly="True" Header="Variance &#963;&#178;" Width="130" HorizontalAlignment="Left" />
 
             <StackPanel Orientation="vertical" Margin="0,40,0,0" Spacing="5">
                 <Image Source="Assets/StoreLogo.png" HorizontalAlignment="Left" Width="120"/>

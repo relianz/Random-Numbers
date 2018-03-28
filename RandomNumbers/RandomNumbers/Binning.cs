@@ -62,12 +62,17 @@ namespace RandomNumbers
         public Boolean AddNumber( double d )
         {            
             // Find index of bin:
-            for( int i = 0; i < Bins.Length; i++ )
+            for( int i = 0; i < bins.Length; i++ )
             {
-                if( d <= Bins[ i ].upper )
+                if( d <= bins[ i ].upper )
                 {
-                    Bins[ i ].Amount++;
-                    TotalCount++;
+#if DEBUG
+                    if( d < bins[ i ].lower )
+                        return false;
+#endif
+                    // index found, increment number count:
+                    bins[ i ].Amount++;
+                    totalCount++;
 
                     return true;
                 }
@@ -80,12 +85,12 @@ namespace RandomNumbers
 
         public void Clear()
         {
-            for( int i = 0; i < Bins.Length; i++ )
+            for( int i = 0; i < bins.Length; i++ )
             {
-                Bins[ i ].Amount = 0L;
+                bins[ i ].Amount = 0L;
             }
 
-            TotalCount = 0UL;
+            totalCount = 0UL;
 
         } // Clear
 
@@ -108,7 +113,35 @@ namespace RandomNumbers
         public double MinValue { get => minValue; set => minValue = value; }
         public double MaxValue { get => maxValue; set => maxValue = value; }
         public double Delta { get => delta; set => delta = value; }
-        public NumberBin[] Bins { get => bins; set => bins = value; }
+
+        public NumberBin[] Bins
+        {
+            get
+            {
+                if (bins == null)
+                    return null;
+
+                ulong n = 0UL;
+                long  a = 0L;
+
+                for (int i = 0; i < bins.Length; i++)
+                {
+                    a = bins[ i ].Amount;
+                    n += (ulong)a;
+
+                } // for all bins
+
+                if (n == TotalCount)
+                    return bins;
+
+                // should better throw an exception?
+                return null;
+
+            } // get
+
+            set => bins = value;
+
+        } // Bins
         #endregion
         #endregion
 
