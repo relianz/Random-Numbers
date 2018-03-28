@@ -35,6 +35,7 @@ using Windows.UI.Core;                                      // CoreDispatcherPri
 using Windows.UI.Xaml;                                      // RoutedEventArgs
 using Windows.UI.Xaml.Controls;                             // Page
 using Windows.UI.Xaml.Media.Imaging;                        // WriteableBitmap
+
 using WinRTXamlToolkit.Controls.DataVisualization.Charting; // ColumnSeries
 
 namespace RandomNumbers
@@ -190,6 +191,8 @@ namespace RandomNumbers
                     default:
                         throw new ArgumentOutOfRangeException( "Invalid randomness index" );
                 }
+
+                AssertFieldValues();
 
                 // create stop watch to compute number generation rate:
                 Watch = new Stopwatch();
@@ -416,6 +419,13 @@ namespace RandomNumbers
             rndBitmap.Source = _wb;
 
         } // WriteImageToBitmap
+
+        private void AssertFieldValues()
+        {
+            if (viewModel.Lmax <= viewModel.Lmin)
+                viewModel.Lmax = viewModel.Lmin + 1;
+
+        } // AssertFieldValues
         #endregion
 
     } // class MainPage

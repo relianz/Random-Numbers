@@ -55,6 +55,9 @@ namespace RandomNumbers
 
         public static double Scale( long l, long lmax, long lmin, double dmax, double dmin )
         {
+            if( !(lmax > lmin) )
+                throw new ArgumentOutOfRangeException( "lmax (" + lmax + ") must be greater than lmin (" + lmin + ")" );
+
             double r = ((double)(l - lmin) / (double)(lmax - lmin)) * (dmax - dmin) + dmin;
 
             return r;

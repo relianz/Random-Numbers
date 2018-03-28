@@ -27,10 +27,15 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="using:RandomNumbers"
+    xmlns:local="using:RandomNumbers.Formatters"
     xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <local:IntFormatter x:Key="IntConverter" />
+        <local:LongFormatter x:Key="LongConverter" />
+    </Page.Resources>
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
        
@@ -54,10 +59,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">
                 
                 <TextBox x:Name="rndEquals" Header="Test if value equals" InputScope="Number" 
-                         Text="{x:Bind Path=viewModel.RndEquals, Mode=TwoWay}" 
+                         Text="{x:Bind Path=viewModel.RndEquals, Mode=TwoWay, Converter={StaticResource IntConverter}}" 
                          Width="150" HorizontalAlignment="Center" />
                 
-                <TextBox x:Name="rndMatches" Header="Number of matches" InputScope="Number" 
+                <TextBox x:Name="rndMatches" Header="Number of matches" IsReadOnly="True" 
                          Width="150" HorizontalAlignment="Center" />
             </StackPanel>
             
@@ -74,18 +79,18 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center" Spacing="15">
             
             <TextBox x:Name="numberCount" Header="Number count" InputScope="Number" 
-                     Text="{x:Bind Path=viewModel.NumOfRandomNumbers, Mode=TwoWay}" 
+                     Text="{x:Bind Path=viewModel.NumOfRandomNumbers, Mode=TwoWay, Converter={StaticResource LongConverter}}" 
                      Width="150" HorizontalAlignment="Left" />
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Spacing="5">
                 
                 <TextBox x:Name="minRandomNumber" Header="Minimum" InputScope="Number" 
-                     Text="{x:Bind Path=viewModel.Lmin, Mode=TwoWay}" 
-                     Width="90" HorizontalAlignment="Left" />
+                         Text="{x:Bind Path=viewModel.Lmin, Mode=TwoWay, Converter={StaticResource IntConverter}}" 
+                         Width="90" HorizontalAlignment="Left" />
                 
                 <TextBox x:Name="maxRandomNumber" Header="Maximum" InputScope="Number" 
-                     Text="{x:Bind Path=viewModel.Lmax, Mode=TwoWay}" 
-                     Width="90" HorizontalAlignment="Left" />
+                         Text="{x:Bind Path=viewModel.Lmax, Mode=TwoWay, Converter={StaticResource IntConverter}}" 
+                         Width="90" HorizontalAlignment="Left" />
 
                 <ToggleSwitch x:Name="minMaxDefaults" Header="Default values" Margin="10,0,0,0"
                               OffContent="Off" OnContent="On" Toggled="MinMaxDefaults_Toggled"/>
