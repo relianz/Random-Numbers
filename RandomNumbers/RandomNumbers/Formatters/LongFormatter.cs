@@ -30,18 +30,17 @@ namespace RandomNumbers.Formatters
 {
     internal class LongFormatter : IValueConverter
     {
-        // This converts the Integer object to the string to display
         public object Convert( object value, Type targetType, object parameter, string language )
         {
-            // Retrieve the format string and use it to format the value.
+            // Retrieve the format string and use it to format the value:
             string formatString = parameter as string;
             if (!string.IsNullOrEmpty( formatString ))
             {
                 return string.Format( new CultureInfo( language ), formatString, value );
             }
 
-            // If the format string is null or empty, simply call ToString() on the value.
-            return value.ToString();
+            // The format string is null or empty, add thousands separators:
+            return string.Format( "{0:n0}", value );
 
         } // Convert
 
@@ -58,7 +57,8 @@ namespace RandomNumbers.Formatters
             {
                 return 0L;
             }
-        }
+
+        } // ConvertBack
 
     } // class LongFormatter
 
