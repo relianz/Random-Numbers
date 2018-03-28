@@ -251,6 +251,7 @@ namespace RandomNumbers
 
             int p = -1;
             int nextP = 0;
+            int deltaP = 0;
             Boolean randomNumberMatch = false;
 
             // Create random numbers:
@@ -266,16 +267,25 @@ namespace RandomNumbers
                 }
 
                 // Compute offset in bitmap:
-                nextP = OffsetInBitmap( RndBitmapWidth, RndBitmapHeight, viewModel.NumOfRandomNumbers, k );
+                nextP  = OffsetInBitmap( RndBitmapWidth, RndBitmapHeight, viewModel.NumOfRandomNumbers, k );
+                deltaP = nextP - p;
 
                 // Next pixel reached?
-                if (nextP > p)
+                if( deltaP > 0 )
                 {
-                    p = nextP;
-                    SetPixelNoMatch( p );
+                    int pp;
+
+                    for( pp = p + 1; pp <= nextP; pp++ )
+                    {
+                        SetPixelNoMatch( pp );
+                    }
+                                      
                     randomNumberMatch = false;
-                    
+                    p = pp - 1;
+
                 } // next pixel reached
+
+                Debug.Assert( p == nextP );
 
                 if (!randomNumberMatch)
                 {
@@ -283,7 +293,7 @@ namespace RandomNumbers
                     {
 #if DEBUG
                         // compute coordinates (for debugging purposes):
-                        int y = p / RndBitmapWidth;
+                        int y = p /  RndBitmapWidth;
                         int x = p - (RndBitmapWidth * y);
 #endif
                         randomNumberMatch = true;
