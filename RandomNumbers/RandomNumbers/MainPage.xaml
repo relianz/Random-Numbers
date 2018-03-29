@@ -42,7 +42,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -104,8 +104,17 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <ComboBoxItem Content="No"/>
             </ComboBox>
 
-            <TextBox x:Name="averageText"  IsReadOnly="True" Header="Expected value &#956;" Width="130" HorizontalAlignment="Left" />
-            <TextBox x:Name="varianceText" IsReadOnly="True" Header="Variance &#963;&#178;" Width="130" HorizontalAlignment="Left" />
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <ToggleSwitch x:Name="storeInFile" Header="Store numbers in file" Margin="0,0,0,0"
+                              OffContent="Off" OnContent="On" Toggled="StoreInFile_Toggled"/>
+                <TextBlock x:Name="fileName" Margin="0,0,10,0"
+                           Text="{x:Bind Path=viewModel.NumbersFileName, Mode=OneWay}"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBox x:Name="averageText"  IsReadOnly="True" Header="Expected value &#956;" Width="120" HorizontalAlignment="Left" />
+                <TextBox x:Name="varianceText" IsReadOnly="True" Header="Variance &#963;&#178;" Width="120" HorizontalAlignment="Left" />
+            </StackPanel>
 
             <StackPanel Orientation="vertical" Margin="0,40,0,0" Spacing="5">
                 <Image Source="Assets/StoreLogo.png" HorizontalAlignment="Left" Width="120"/>

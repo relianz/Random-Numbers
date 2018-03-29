@@ -42,6 +42,8 @@ namespace RandomNumbers
         private int rndEquals;
         private long pixelTested;
         private long pixelSet;
+
+        private string numbersFileName;
         #endregion
 
         #region Getter/Setter
@@ -178,6 +180,21 @@ namespace RandomNumbers
             }
 
         } // PixelSet
+
+        public string NumbersFileName
+        {
+            get => numbersFileName;
+            set
+            {
+                if (value != numbersFileName)
+                {
+                    numbersFileName = value;
+                    OnPropertyChanged( "NumbersFileName" );
+                }
+            }
+
+        } // NumbersFileName
+
         #endregion
 
         public ViewModel( int imageWidth, int imageHeight )
@@ -192,6 +209,8 @@ namespace RandomNumbers
 
             PixelTested = 0L;
             PixelSet = 0L;
+
+            NumbersFileName = "".PadRight( 14 );
 
         } // ctor
 
@@ -212,6 +231,13 @@ namespace RandomNumbers
             RndEquals = m;
 
         } // ComputeAndSetRndEquals
+
+        public void AssertFieldValues()
+        {
+            if( Lmax <= Lmin)
+                Lmax = Lmin + 1;
+
+        } // AssertFieldValues
 
     } // class ViewModel
 }
