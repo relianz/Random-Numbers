@@ -1,7 +1,7 @@
 # Random-Numbers
 A quite simple [UWP](https://www.visualstudio.com/vs/features/universal-windows-platform/) application implemented in C# that can generate and statistically evaluate random numbers. The generator is selected at runtime via [strategy design pattern](https://en.wikipedia.org/wiki/Strategy_pattern). A two-dimensional graphic facilitates the recognition of recurring patterns in number sequences.
 
-![Screenshot](/180322_1701%20GUI.PNG)
+![Screenshot](/180329_2136%20GUI.PNG)
 ## Building the program
 The executable program can be built in five steps:
 1. Clone the repository. Personally, I like to use [SourceTree](https://www.sourcetreeapp.com/) as a free git client.
