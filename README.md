@@ -51,6 +51,23 @@ where `SQR` denotes squaring. The newly generated random number `x<k>` is only i
 
 The estimates are implemented as static methods in the class `RandomNumbers.Statistics`.
 
+## Storing numbers
+The [INumberStorage](RandomNumbers/RandomNumbers/Storage/NumberStorage.cs) interface defines methods for storing the generated random numbers. 
+
+### CSV file storage
+If the toggle switch _Store numbers in file_ is set to _On_ on the user interface, a file selection dialog will be displayed at the beginning of random number generation. Class [CsvFileStorage](RandomNumbers/RandomNumbers/Storage/CsvFileStorage.cs) stores the random numbers in the selected CSV file with a semicolon as a separator between integers and scaled values:
+
+    -40;0
+    19;0,59
+    -16;0,24
+    59;0,99
+    52;0,92
+    .
+    .
+    .
+    
+You can read the file with Microsoft Excel, for example.  
+
 ## Limitations
 The following limitations currently exist: 
 1. Constant size of image bitmap (512 x 512 pixels)
