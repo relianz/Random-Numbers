@@ -110,6 +110,8 @@
     <Compile Include="RNG.cs" />
     <Compile Include="SecureRandomness.cs" />
     <Compile Include="Statistics.cs" />
+    <Compile Include="Storage\CsvFileStorage.cs" />
+    <Compile Include="Storage\NumberStorage.cs" />
     <Compile Include="ViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

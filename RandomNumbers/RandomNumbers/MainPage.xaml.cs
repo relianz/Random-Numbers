@@ -30,11 +30,6 @@ using System.Reflection;                                    // Assembly
 using System.Threading;                                     // CancellationTokenSource
 using System.Threading.Tasks;                               // Task
 using System.Runtime.InteropServices.WindowsRuntime;        // _wb.PixelBuffer
-using System.Collections.Generic;                           // List
-
-using Windows.Storage;                                      // StorageFile
-using Windows.Storage.Streams;                              // IRandomAccessStream
-using Windows.Storage.Provider;                             // FileUpdateStatus
 
 using Windows.UI.Core;                                      // CoreDispatcherPriority
 using Windows.UI.Xaml;                                      // RoutedEventArgs
@@ -42,6 +37,8 @@ using Windows.UI.Xaml.Controls;                             // Page
 using Windows.UI.Xaml.Media.Imaging;                        // WriteableBitmap
 
 using WinRTXamlToolkit.Controls.DataVisualization.Charting; // ColumnSeries
+
+using RandomNumbers.Storage;                                // INumberStorage
 
 namespace RandomNumbers
 {
@@ -106,8 +103,7 @@ namespace RandomNumbers
         public RNG Rng { get => rng; set => rng = value; }
         public Stopwatch Watch { get => watch; set => watch = value; }
         public int RndBitmapWidth { get => rndBitmapWidth; set => rndBitmapWidth = value; }
-        public int RndBitmapHeight { get => rndBitmapHeight; set => rndBitmapHeight = value; }
-        public StorageFile NumberFile { get => numbersFile; set => numbersFile = value; }
+        public int RndBitmapHeight { get => rndBitmapHeight; set => rndBitmapHeight = value; }        
         #endregion
 
         #endregion
@@ -136,8 +132,7 @@ namespace RandomNumbers
 
         private ViewModel viewModel;
 
-        private StorageFile numbersFile;
-        private IRandomAccessStream numbersFileStream;
+        private INumberStorage storage;
 
         private CancellationTokenSource tokenSource;
         private CancellationToken token;
@@ -168,37 +163,12 @@ namespace RandomNumbers
 
         } // MinMaxDefaults_Toggled
 
-        private async void StoreInFile_Toggled( object sender, RoutedEventArgs e )
+        private void StoreInFile_Toggled( object sender, RoutedEventArgs e )
         {
             ToggleSwitch toggleSwitch = sender as ToggleSwitch;
-            if (toggleSwitch != null)
+            if( toggleSwitch != null )
             {
-                if (toggleSwitch.IsOn == true)
-                {
-                    var savePicker = new Windows.Storage.Pickers.FileSavePicker();
-
-                    savePicker.SuggestedStartLocation =
-                        Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
-                    
-                    // Dropdown of file types the user can save the number file as:
-                    savePicker.FileTypeChoices.Add( "CSV File", new List<string>() { ".csv" } );
-
-                    // Create default file name if the user does not type one in or select a file to replace:
-                    string now = DateTime.Now.ToString( "yyMMdd_HHmm" );
-                    savePicker.SuggestedFileName = now + "-RandomNumbers.csv";
-
-                    numbersFile = await savePicker.PickSaveFileAsync();
-                    if( numbersFile != null )
-                    {                        
-                        viewModel.NumbersFileName = numbersFile.Name;
-
-                    } // numberFile
-                }
-                else
-                {
-                    numbersFile = null;
-                    fileName.Text = "".PadRight( 14 );
-                }
+                fileName.Text = "".PadRight( 14 );                
 
             } // toggleSwitch != null
 
@@ -263,16 +233,31 @@ namespace RandomNumbers
                 cs.ItemsSource = null;
                 IsRunning = true;
 
-                // write random numbers to file?
-                numbersFileStream = null;
-                if ( numbersFile != null )
+                // write random numbers to file?  
+                if( viewModel.FileStorage )
                 {
-                    // Prevent updates to the number file until we finish making changes and call CompleteUpdatesAsync:
-                    CachedFileManager.DeferUpdates( numbersFile );
-                    var stream = await numbersFile.OpenAsync( FileAccessMode.ReadWrite );
-                    numbersFileStream = (IRandomAccessStream)stream;
+                    if( storage == null )
+                    {                        
+                        storage = new CsvFileStorage();
 
-                } // numberFile != null
+                        string path = null;
+                        path = await storage.SelectLocation( "RandomNumbers.csv" );
+                        if( path != null )
+                        {
+                            viewModel.NumbersFileName = Path.GetFileName( path );
+
+                            bool status = await storage.Open();
+                            Debug.Assert( status == true );
+                        }
+                        else
+                        {
+                            // user aborted file selection:
+                            storage = null;
+                        }
+
+                    } // storage == null
+
+                } // viewModel.FileStorage
 
                 // Start random number generation:
                 Watch.Start();
@@ -288,14 +273,14 @@ namespace RandomNumbers
             }
 
             // wrote random numbers to file?
-            if( numbersFile != null )
+            if( storage != null )
             {
-                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync( numbersFile );
-                if( status == FileUpdateStatus.Complete )
-                {
-                    fileName.Text = "saved";
-                }
-            }
+                bool status = await storage.Close();
+                Debug.Assert( status == true );
+
+                storage = null;
+                fileName.Text = "saved";
+            }            
 
             // Display results:
             cs.ItemsSource = binning.Bins;
@@ -322,16 +307,7 @@ namespace RandomNumbers
             int nextP = 0;
             int deltaP = 0;
             Boolean randomNumberMatch = false;
-
-            IOutputStream outputStream = null;
-            DataWriter writer = null;
-
-            if( numbersFileStream != null )
-            {
-                outputStream = numbersFileStream.GetOutputStreamAt( 0 );
-                writer = new DataWriter( outputStream );
-            }
-                
+                            
             // Create random numbers:
             for (long k = 0; k < viewModel.NumOfRandomNumbers; k++)
             {
@@ -344,12 +320,9 @@ namespace RandomNumbers
                     throw new InvalidOperationException( "Adding number to bin failed (" + r + ")" );
                 }
 
-                // write random numbers to file?
-                if( writer != null )
-                {
-                    string line = li.ToString() + ";" + r.ToString() + "\n";
-                    writer.WriteString( line );
-                }
+                // write random numbers to storage?
+                if( storage != null )                  
+                    storage.StoreNumbers( li, r );
 
                 // Compute offset in bitmap:
                 nextP  = OffsetInBitmap( RndBitmapWidth, RndBitmapHeight, viewModel.NumOfRandomNumbers, k );
@@ -441,12 +414,6 @@ namespace RandomNumbers
                 } // Update GUI
 
             } // for all random numbers
-
-            if (writer != null)
-                await writer.StoreAsync();
-
-            if (outputStream != null)
-                await outputStream.FlushAsync();
 
         } // GenerateRandomNumbers
 

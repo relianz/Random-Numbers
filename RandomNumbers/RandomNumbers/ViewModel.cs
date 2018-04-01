@@ -43,6 +43,7 @@ namespace RandomNumbers
         private long pixelTested;
         private long pixelSet;
 
+        private bool fileStorage;
         private string numbersFileName;
         #endregion
 
@@ -194,6 +195,20 @@ namespace RandomNumbers
             }
 
         } // NumbersFileName
+
+        public bool FileStorage
+        {
+            get => fileStorage;
+            set
+            {
+                if (value != fileStorage)
+                {
+                    fileStorage = value;
+                    OnPropertyChanged( "FileStorage" );
+                }
+            }
+
+        } // FileStorage
 
         #endregion
 

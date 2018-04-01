@@ -106,7 +106,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             <StackPanel Orientation="Horizontal" Spacing="5">
                 <ToggleSwitch x:Name="storeInFile" Header="Store numbers in file" Margin="0,0,0,0"
-                              OffContent="Off" OnContent="On" Toggled="StoreInFile_Toggled"/>
+                              OffContent="Off" OnContent="On" IsOn="{x:Bind Path=viewModel.FileStorage, Mode=TwoWay}" Toggled="StoreInFile_Toggled"/>
                 <TextBlock x:Name="fileName" Margin="0,0,10,0"
                            Text="{x:Bind Path=viewModel.NumbersFileName, Mode=OneWay}"/>
             </StackPanel>
