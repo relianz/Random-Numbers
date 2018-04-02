@@ -42,8 +42,11 @@ namespace RandomNumbers.Storage
                 throw new InvalidOperationException( "No file selected" );
             }
 
-            // Prevent updates to the number file until we finish making changes and call CompleteUpdatesAsync:
-            CachedFileManager.DeferUpdates( file );
+            if( useFileManager )
+            {
+                // Prevent updates to the number file until we finish making changes and call CompleteUpdatesAsync:
+                CachedFileManager.DeferUpdates( file );
+            }
 
             var s = await file.OpenAsync( FileAccessMode.ReadWrite );
             stream = (IRandomAccessStream)s;
@@ -61,20 +64,30 @@ namespace RandomNumbers.Storage
                 throw new InvalidOperationException( "Not opened" );
             }
 
-            await writer.StoreAsync();
+            uint ws = await writer.StoreAsync();
 
-            if (outputStream != null)
+            if( outputStream != null )
                 await outputStream.FlushAsync();
             else
                 return false;
 
-            FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync( file );
-            if( status != FileUpdateStatus.Complete ) {
-                return false;
+            if( useFileManager )
+            {
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync( file );
+                if (status != FileUpdateStatus.Complete)
+                {
+                    return false;
+                }
             }
 
+            writer.Dispose();
             writer = null;
+
+            outputStream.Dispose();
             outputStream = null;
+
+            stream.Dispose();
+            stream = null;
 
             return true;
 
@@ -82,6 +95,7 @@ namespace RandomNumbers.Storage
 
         public async Task<string> SelectLocation( string basename = "CsvFileStorage.csv" )
         {
+            location = null;
             var savePicker = new FileSavePicker();
 
             savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
@@ -92,7 +106,7 @@ namespace RandomNumbers.Storage
             // Create default file name if the user does not type one in or select a file to replace:
             string now = DateTime.Now.ToString( "yyMMdd_HHmm" );
             savePicker.SuggestedFileName = now + "-" + basename;
-
+          
             file = await savePicker.PickSaveFileAsync();
             if( file != null )
             {
@@ -127,6 +141,7 @@ namespace RandomNumbers.Storage
         private IOutputStream outputStream;
         private DataWriter writer;
         private string location;
+        private static bool useFileManager = true;
         #endregion
 
     } // class CsvFileStorage

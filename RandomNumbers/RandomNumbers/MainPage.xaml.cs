@@ -74,6 +74,8 @@ namespace RandomNumbers
             int imageSize = RndBitmapWidth * RndBitmapHeight * 4;
             imageArray = new byte[ imageSize ];
 
+            storage = null;
+
         } // ctor MainPage
 
         public string GetAttributeValueFromAssy( string name )
@@ -168,6 +170,7 @@ namespace RandomNumbers
             ToggleSwitch toggleSwitch = sender as ToggleSwitch;
             if( toggleSwitch != null )
             {
+                storage = null;
                 fileName.Text = "".PadRight( 14 );                
 
             } // toggleSwitch != null
@@ -176,7 +179,7 @@ namespace RandomNumbers
 
         private async void Button_Click( object sender, RoutedEventArgs e )
         {
-            if (IsRunning)
+            if( IsRunning )
             {
                 // Stop random number generation:
                 tokenSource.Cancel();
@@ -236,27 +239,25 @@ namespace RandomNumbers
                 // write random numbers to file?  
                 if( viewModel.FileStorage )
                 {
-                    if( storage == null )
-                    {                        
-                        storage = new CsvFileStorage();
+                    Debug.Assert( storage == null );
+                    
+                    storage = new CsvFileStorage();
 
-                        string path = null;
-                        path = await storage.SelectLocation( "RandomNumbers.csv" );
-                        if( path != null )
-                        {
-                            viewModel.NumbersFileName = Path.GetFileName( path );
+                    string path = null;
+                    path = await storage.SelectLocation( "RandomNumbers.csv" );
+                    if( path != null )
+                    {
+                        viewModel.NumbersFileName = Path.GetFileName( path );
 
-                            bool status = await storage.Open();
-                            Debug.Assert( status == true );
-                        }
-                        else
-                        {
-                            // user aborted file selection:
-                            storage = null;
-                        }
-
-                    } // storage == null
-
+                        bool status = await storage.Open();
+                        Debug.Assert( status == true );
+                    }
+                    else
+                    {
+                        // user aborted file selection:
+                        storage = null;
+                    }
+                    
                 } // viewModel.FileStorage
 
                 // Start random number generation:
@@ -280,7 +281,8 @@ namespace RandomNumbers
 
                 storage = null;
                 fileName.Text = "saved";
-            }            
+
+            } // storage != null         
 
             // Display results:
             cs.ItemsSource = binning.Bins;
