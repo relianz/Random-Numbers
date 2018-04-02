@@ -68,6 +68,28 @@ If the toggle switch _Store numbers in file_ is set to _On_ on the user interfac
     
 You can read the file with Microsoft Excel, for example.  
 
+At the end of the `Close` method of [CsvFileStorage](RandomNumbers/RandomNumbers/Storage/CsvFileStorage.cs), `Dispose` is explicitly called for the objects used: 
+
+    public async Task<bool> Close()
+    {
+        .
+        .
+        .
+        writer.Dispose();
+        writer = null;
+
+        outputStream.Dispose();
+        outputStream = null;
+
+        stream.Dispose();
+        stream = null;
+
+        return true;
+
+    } // Close
+    
+This allows reopening the same file immediately without having to wait for the garbage collector to work.
+
 ## Limitations
 The following limitations currently exist: 
 1. Constant size of image bitmap (512 x 512 pixels)
