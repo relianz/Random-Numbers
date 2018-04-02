@@ -37,8 +37,7 @@ namespace RandomNumbers.Storage
         #region Public members
         public async Task<bool> Open()
         {
-            if( file == null )
-            {
+            if( file == null ) {
                 throw new InvalidOperationException( "No file selected" );
             }
 
@@ -80,6 +79,7 @@ namespace RandomNumbers.Storage
                 }
             }
 
+            // dispose all objects manually to enable immediate reopening of the file closed:
             writer.Dispose();
             writer = null;
 
@@ -120,8 +120,7 @@ namespace RandomNumbers.Storage
 
         public void StoreNumbers( int n, double d )
         {
-            if( writer == null )
-            {
+            if( writer == null ) {
                 throw new InvalidOperationException( "File not opened" );
             }
 
